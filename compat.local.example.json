@@ -1,0 +1,14 @@
+{
+  "projectsDir": "C:/Projects",
+  "cdpPort": 9222,
+  "routes": {
+    "album": "/album/<album-id>",
+    "playlist": "/playlist/<playlist-id>",
+    "local-files": "/collection/local-files"
+  },
+  "expect": {
+    "album-length": ["album", "playlist"],
+    "producers": ["album", "playlist"],
+    "local-files-plus": ["local-files"]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "spicetify-compat",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Tell when it's safe to update Spotify and Spicetify, and check that every extension still works afterwards.",
+  "type": "module",
+  "bin": {
+    "compat": "bin/compat.mjs"
+  },
+  "scripts": {
+    "test": "node --test \"test/*.test.mjs\"",
+    "compat": "node bin/compat.mjs",
+    "prepare": "husky"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@10.24.0",
+  "devDependencies": {
+    "@commitlint/cli": "^20.5.3",
+    "@commitlint/config-conventional": "^20.5.3",
+    "husky": "^9.1.7"
+  }
+}
