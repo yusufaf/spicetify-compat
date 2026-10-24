@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync, existsSync } from 'node:fs';
+import { readdirSync, readFileSync, existsSync, statSync } from 'node:fs';
 import { join, basename } from 'node:path';
 
 // Local extension repos: any <projectsDir>/spicetify-*/manifest.json with a `main` file.
@@ -7,6 +7,8 @@ export function findExtensions(projectsDir) {
   for (const entry of readdirSync(projectsDir, { withFileTypes: true })) {
     if (!entry.isDirectory() || !entry.name.startsWith('spicetify-')) continue;
     const dir = join(projectsDir, entry.name);
+    // A linked worktree has a .git file instead of a directory; only main checkouts count.
+    if (!existsSync(join(dir, '.git')) || !statSync(join(dir, '.git')).isDirectory()) continue;
     const manifestPath = join(dir, 'manifest.json');
     if (!existsSync(manifestPath)) continue;
     let manifest;
