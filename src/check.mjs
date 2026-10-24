@@ -94,6 +94,13 @@ export async function runCheck(config, { restart = true } = {}) {
     }
 
     const original = await conn.evaluate('Spicetify.Platform.History.location.pathname');
+    // Sidebar extensions render nothing while Your Library is collapsed, so open it for the run.
+    const openedSidebar = await conn.evaluate(`(() => {
+      const open = document.querySelector('#Desktop_LeftSidebar_Id button[aria-label="Open Your Library"]');
+      open?.click();
+      return !!open;
+    })()`);
+    if (openedSidebar) await sleep(2000);
     for (const [route, path] of Object.entries(config.routes)) {
       const wanted = extensions.filter(ext => results[ext.id].hook && (config.expect[ext.id] ?? []).includes(route));
       if (!wanted.length) continue;
@@ -102,6 +109,9 @@ export async function runCheck(config, { restart = true } = {}) {
       for (const ext of wanted) results[ext.id].routes[route] = (await readHealth(conn, ext.id))?.anchors ?? {};
     }
     await conn.evaluate(`Spicetify.Platform.History.push(${JSON.stringify(original)})`);
+    if (openedSidebar) {
+      await conn.evaluate(`document.querySelector('#Desktop_LeftSidebar_Id button[aria-label="Collapse Your Library"]')?.click()`);
+    }
 
     console.log('\nLive health');
     for (const ext of extensions) {
